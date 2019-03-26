@@ -1,7 +1,9 @@
 package com.mosdev.restapi.domain;
 
+import org.hibernate.FlushMode;
+
 import javax.persistence.*;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -11,9 +13,11 @@ public class Affiche {
     private Integer id;
 
     private String url, name,description, age;
-    private Date date;
 
-    @OneToMany(fetch = FetchType.EAGER,mappedBy = "affiche_id")
+    private Integer date;
+
+    @OneToMany(mappedBy = "affiche_id")
+    @OrderBy
     private Set<AfficheSources> sources;
 
     public Set<AfficheSources> getSources() {
@@ -64,11 +68,7 @@ public class Affiche {
         this.age = age;
     }
 
-    public Date getDate() {
-        return date;
-    }
+    public Integer getDate() { return date; }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    public void setDate(Integer date) { this.date = date; }
 }

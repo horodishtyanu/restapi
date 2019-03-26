@@ -1,9 +1,7 @@
 package com.mosdev.restapi.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class AfficheSources {
@@ -12,8 +10,20 @@ public class AfficheSources {
     private Integer id;
 
     private Integer affiche_id;
-    private String imgURL;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "affiche_sources_id")
+    @OrderBy
+    private Set<AfficheSourcesImages> images;
+
     private String sourceDescription;
+
+    public Set<AfficheSourcesImages> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<AfficheSourcesImages> images) {
+        this.images = images;
+    }
 
     public Integer getId() {
         return id;
@@ -29,14 +39,6 @@ public class AfficheSources {
 
     public void setAffiche_id(Integer affiche_id) {
         this.affiche_id = affiche_id;
-    }
-
-    public String getImgURL() {
-        return imgURL;
-    }
-
-    public void setImgURL(String imgURL) {
-        this.imgURL = imgURL;
     }
 
     public String getSourceDescription() {
