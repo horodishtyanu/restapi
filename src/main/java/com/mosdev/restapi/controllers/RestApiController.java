@@ -13,13 +13,17 @@ import java.util.Map;
 @RestController
 public class RestApiController {
 
-    @Autowired
     private AfficheRepo afficheRepo;
 
-    @GetMapping("/api/main/")
-    public Object getHelloMessage(Map<String, Object> map){
-        Iterable<Affiche> affiches = afficheRepo.findAll();
+    @Autowired
+    public void setAfficheRepo(AfficheRepo afficheRepo) {
+        this.afficheRepo = afficheRepo;
+    }
 
-        return affiches;
+
+    @GetMapping("/poster")
+    public Object getHelloMessage(Map<String, Object> map){
+        return afficheRepo.findAll();
+
     }
 }
