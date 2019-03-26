@@ -24,6 +24,5 @@ public class RestApiController {
     @GetMapping("/poster")
     public Object getHelloMessage(Map<String, Object> map){
         return afficheRepo.findAll();
-
     }
 }
