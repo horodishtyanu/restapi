@@ -1,7 +1,5 @@
 package com.mosdev.restapi.controllers;
 
-
-import com.mosdev.restapi.domain.Affiche;
 import com.mosdev.restapi.repos.AfficheRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +20,7 @@ public class RestApiController {
 
 
     @GetMapping("/poster")
-    public Object getHelloMessage(Map<String, Object> map){
+    public Object getPoster(Map<String, Object> map){
         return afficheRepo.findAll();
     }
 }
