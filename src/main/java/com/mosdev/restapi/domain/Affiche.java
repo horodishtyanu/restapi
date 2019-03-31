@@ -1,13 +1,25 @@
 package com.mosdev.restapi.domain;
 
-import org.hibernate.FlushMode;
+import org.hibernate.Session;
 
 import javax.persistence.*;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 public class Affiche {
+
+    public Affiche() {
+    }
+
+    public Affiche(String url, String name, String description, String age, Integer date, Set<AfficheSources> sources) {
+        this.url = url;
+        this.name = name;
+        this.description = description;
+        this.age = age;
+        this.date = date;
+        this.sources = sources;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -71,4 +83,5 @@ public class Affiche {
     public Integer getDate() { return date; }
 
     public void setDate(Integer date) { this.date = date; }
+
 }
