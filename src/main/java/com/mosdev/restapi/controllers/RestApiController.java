@@ -12,8 +12,6 @@ import java.util.Map;
 public class RestApiController {
 
     private final AfficheRepo afficheRepo;
-
-
     @Autowired
     public RestApiController(AfficheRepo afficheRepo) {
         this.afficheRepo = afficheRepo;
@@ -22,5 +20,12 @@ public class RestApiController {
     @GetMapping("/poster")
     public Object getPoster(Map<Affiche, Long> list){
         return afficheRepo.findAll();
+    }
+
+    @GetMapping("/test")
+    public Object getTest(){
+        
+        Affiche affiche = afficheRepo.findById(2);
+        return affiche.getUrl();
     }
 }
