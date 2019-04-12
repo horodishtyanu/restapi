@@ -12,6 +12,7 @@
     <artifactId>restapi</artifactId>
     <packaging>war</packaging>
     <name>restapi</name>
+    <version>1</version>
     <description>FullREST API MosDev</description>
 
     <properties>
