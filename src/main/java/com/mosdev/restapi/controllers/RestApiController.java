@@ -1,7 +1,9 @@
 package com.mosdev.restapi.controllers;
 
 import com.mosdev.restapi.domain.Affiche;
+import com.mosdev.restapi.domain.Events;
 import com.mosdev.restapi.repos.AfficheRepo;
+import com.mosdev.restapi.repos.EventsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,14 +19,20 @@ import java.util.Map;
 public class RestApiController {
 
     private final AfficheRepo afficheRepo;
+    private final EventsRepo eventsRepo;
     @Autowired
-    public RestApiController(AfficheRepo afficheRepo) {
+    public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo) {
         this.afficheRepo = afficheRepo;
+        this.eventsRepo = eventsRepo;
     }
-
     @GetMapping("/poster")
     public Object getPoster(Map<Affiche, Long> list){
         return afficheRepo.findAll();
+    }
+
+    @GetMapping("/events")
+    public Object getEvents(Map<Events, Long> map){
+        return eventsRepo.findAll();
     }
 
     @GetMapping("/test")

@@ -1,7 +1,5 @@
 package com.mosdev.restapi.domain;
 
-import org.hibernate.Session;
-
 import javax.persistence.*;
 import java.util.Set;
 
