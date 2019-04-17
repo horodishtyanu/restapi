@@ -4,9 +4,16 @@ import com.mosdev.restapi.domain.Affiche;
 import com.mosdev.restapi.domain.Events;
 import com.mosdev.restapi.repos.AfficheRepo;
 import com.mosdev.restapi.repos.EventsRepo;
+import org.hibernate.cfg.annotations.QueryBinder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cglib.core.Predicate;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,11 +46,10 @@ public class RestApiController {
 
     @GetMapping("/test")
     public Object test(){
-
         Map<String, Object> myArr = new HashMap<>();
         myArr.put("Events", eventsRepo.findAll());
         myArr.put("Posters", afficheRepo.findAll().get(0));
-        return myArr;
+        return new ResponseEntity<>(myArr, HttpStatus.OK);
     }
 
     @GetMapping("/downFile")

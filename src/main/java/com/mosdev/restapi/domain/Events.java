@@ -12,12 +12,13 @@ public class Events {
     public Events() {
     }
 
-    public Events(Integer id, String name, Integer date, String image, String description) {
+    public Events(Integer id, String name, Integer date, String image, String description, String active) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.image = image;
         this.description = description;
+        this.active = active;
     }
 
     @Id
@@ -27,6 +28,15 @@ public class Events {
     private Integer date;
     private String image;
     private String description;
+    private String active;
+
+    public String getActive() {
+        return active;
+    }
+
+    public void setActive(String active) {
+        this.active = active;
+    }
 
     public Integer getId() {
         return id;

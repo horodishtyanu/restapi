@@ -1,7 +1,13 @@
 package com.mosdev.restapi.repos;
 
+
 import com.mosdev.restapi.domain.Events;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
-public interface EventsRepo extends JpaRepository<Events, Long> {
+import java.util.List;
+
+public interface EventsRepo extends JpaRepository<Events, Long>{
+   @Query("SELECT e from Events e where e.active = 'Y'")
+   List<Events> findAll();
 }
