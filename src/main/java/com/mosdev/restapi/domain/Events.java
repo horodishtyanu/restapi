@@ -12,13 +12,13 @@ public class Events {
     public Events() {
     }
 
-    public Events(Integer id, String name, Integer date, String image, String description, String active) {
-        this.id = id;
+    public Events(String name, Integer date, String image, String description, String active, String sort) {
         this.name = name;
         this.date = date;
         this.image = image;
         this.description = description;
         this.active = active;
+        this.sort = sort;
     }
 
     @Id
@@ -29,6 +29,15 @@ public class Events {
     private String image;
     private String description;
     private String active;
+    private String sort;
+
+    public String getSort() {
+        return sort;
+    }
+
+    public void setSort(String sort) {
+        this.sort = sort;
+    }
 
     public String getActive() {
         return active;
