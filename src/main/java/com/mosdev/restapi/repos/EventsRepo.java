@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface EventsRepo extends JpaRepository<Events, Long>{
-   @Query("SELECT e from Events e where e.active = 'Y'")
+   @Query("SELECT e from Events e where e.active = 'Y' ORDER BY e.sort ASC")
    List<Events> findAll();
 }

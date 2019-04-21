@@ -12,7 +12,7 @@ public class Events {
     public Events() {
     }
 
-    public Events(String name, Integer date, String image, String description, String active, String sort) {
+    public Events(String name, Integer date, String image, String description, String active, Integer sort) {
         this.name = name;
         this.date = date;
         this.image = image;
@@ -29,13 +29,13 @@ public class Events {
     private String image;
     private String description;
     private String active;
-    private String sort;
+    private Integer sort;
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

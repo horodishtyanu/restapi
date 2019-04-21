@@ -1,6 +1,7 @@
 package com.mosdev.restapi.controllers;
 
-import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.mosdev.restapi.domain.Affiche;
 import com.mosdev.restapi.domain.Events;
 import com.mosdev.restapi.repos.AdsRepo;
@@ -14,10 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.persistence.GeneratedValue;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -47,14 +46,49 @@ public class RestApiController {
     }
 
     @GetMapping("/test")
+
     public Object test(){
 
+        List    events = eventsRepo.findAll(),
+                ads = adsRepo.findAll(),
+                quizs = quizRepo.findAll();
+        ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+        ArrayList<Map> result = new ArrayList<>();
 
-        Map<String, Object> myArr = new HashMap<>();
-        myArr.put("Events", eventsRepo.findAll());
-        myArr.put("Ads", adsRepo.findAll());
-        myArr.put("Quiz", quizRepo.findAll());
-        return new ResponseEntity<>(myArr, HttpStatus.OK);
+        try {
+
+            for (Object event:events
+                 ) {
+                String json = ow.writeValueAsString(event);
+                Map<String, String> myArr = new HashMap<>();
+                myArr.put("type", "event");
+                myArr.put("object", json);
+                result.add(myArr);
+            }
+
+            for (Object ad:ads
+            ) {
+                String json = ow.writeValueAsString(ad);
+                Map<String, String> myArr = new HashMap<>();
+                myArr.put("type", "ads");
+                myArr.put("object", json);
+                result.add(myArr);
+            }
+
+            for (Object quiz:quizs
+            ) {
+                String json = ow.writeValueAsString(quiz);
+                Map<String, String> myArr = new HashMap<>();
+                myArr.put("type", "quiz");
+                myArr.put("object", json);
+                result.add(myArr);
+            }
+
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/downFile")
