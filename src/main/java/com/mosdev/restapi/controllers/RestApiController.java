@@ -45,13 +45,7 @@ public class RestApiController {
     }
 
     @GetMapping("/events")
-    public Object getEvents(Map<Events, Long> map){
-        return eventsRepo.findAll();
-    }
-
-    @GetMapping("/test")
-
-    public Object test(){
+    public Object getEvents(){
 
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         List<Map<String,String>> result = new ArrayList<>();
