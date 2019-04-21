@@ -2,8 +2,10 @@ package com.mosdev.restapi.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.mosdev.restapi.domain.Ads;
 import com.mosdev.restapi.domain.Affiche;
 import com.mosdev.restapi.domain.Events;
+import com.mosdev.restapi.domain.Quiz;
 import com.mosdev.restapi.repos.AdsRepo;
 import com.mosdev.restapi.repos.AfficheRepo;
 import com.mosdev.restapi.repos.EventsRepo;
@@ -28,6 +30,8 @@ public class RestApiController {
     private final EventsRepo eventsRepo;
     private final AdsRepo adsRepo;
     private final QuizRepo quizRepo;
+    private Object o1;
+
     @Autowired
     public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo, AdsRepo adsRepo, QuizRepo quizRepo) {
         this.afficheRepo = afficheRepo;
@@ -49,47 +53,39 @@ public class RestApiController {
 
     public Object test(){
 
-        List    events = eventsRepo.findAll(),
-                ads = adsRepo.findAll(),
-                quizs = quizRepo.findAll();
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        ArrayList<Map> result = new ArrayList<>();
+        List<Map<String,String>> result = new ArrayList<>();
+        List<Object> all = new ArrayList<>();
+        all.addAll(eventsRepo.findAll());
+        all.addAll(adsRepo.findAll());
+        all.addAll(quizRepo.findAll());
+
 
         try {
-
-            for (Object event:events
+            for (Object item:all
                  ) {
-                String json = ow.writeValueAsString(event);
+                String json = ow.writeValueAsString(item);
                 Map<String, String> myArr = new HashMap<>();
-                myArr.put("type", "event");
+                if (item instanceof Events){
+                    myArr.put("type", ((Events)item).getType());
+                    myArr.put("sort", ((Events)item).getSort().toString());
+                }else if(item instanceof Ads){
+                    myArr.put("type", ((Ads)item).getType());
+                    myArr.put("sort", ((Ads)item).getSort().toString());
+                }else if(item instanceof Quiz){
+                    myArr.put("type", ((Quiz)item).getType());
+                    myArr.put("sort", ((Quiz)item).getSort().toString());
+                }
                 myArr.put("object", json);
                 result.add(myArr);
             }
-
-            for (Object ad:ads
-            ) {
-                String json = ow.writeValueAsString(ad);
-                Map<String, String> myArr = new HashMap<>();
-                myArr.put("type", "ads");
-                myArr.put("object", json);
-                result.add(myArr);
-            }
-
-            for (Object quiz:quizs
-            ) {
-                String json = ow.writeValueAsString(quiz);
-                Map<String, String> myArr = new HashMap<>();
-                myArr.put("type", "quiz");
-                myArr.put("object", json);
-                result.add(myArr);
-            }
-
         }catch (IOException e){
             e.printStackTrace();
         }
-
+        result.sort((Comparator.comparing(o -> o.get("sort"))));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
 
     @GetMapping("/downFile")
     public void downloadFile(HttpServletResponse response) throws IOException {

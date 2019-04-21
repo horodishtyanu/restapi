@@ -4,20 +4,21 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-public class Quiz {
+public class Quiz implements Comparable<Quiz>{
 
     public Quiz() {
     }
 
-    public Quiz(String name, String image, String preview_image, String task_text, String prize_text, String sort, String active, Long time, Set<QuizQuest> quests) {
+    public Quiz(String name, String image, String preview_image, String task_text, String prize_text, String active, String type, Long time, Integer sort, Set<QuizQuest> quests) {
         this.name = name;
         this.image = image;
         this.preview_image = preview_image;
         this.task_text = task_text;
         this.prize_text = prize_text;
-        this.sort = sort;
         this.active = active;
+        this.type = type;
         this.time = time;
+        this.sort = sort;
         this.quests = quests;
     }
 
@@ -30,12 +31,27 @@ public class Quiz {
             preview_image,
             task_text,
             prize_text,
-            sort,
-            active;
+            active,
+            type;
     private Long time;
+    private Integer sort;
 
     @OneToMany(mappedBy = "quiz_id")
     private Set<QuizQuest> quests;
+
+    @Override
+    public int compareTo(Quiz o){
+        return this.getSort().compareTo(o.getSort());
+    }
+
+    public String getType() {
+        type = "quiz";
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Set<QuizQuest> getQuests() {
         return quests;
@@ -93,11 +109,11 @@ public class Quiz {
         this.prize_text = prize_text;
     }
 
-    public String getSort() {
+    public Integer getSort() {
         return sort;
     }
 
-    public void setSort(String sort) {
+    public void setSort(Integer sort) {
         this.sort = sort;
     }
 

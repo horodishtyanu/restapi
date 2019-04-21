@@ -12,13 +12,14 @@ public class Events {
     public Events() {
     }
 
-    public Events(String name, Integer date, String image, String description, String active, Integer sort) {
+    public Events(String name, Integer date, String image, String description, String active, Integer sort, String type) {
         this.name = name;
         this.date = date;
         this.image = image;
         this.description = description;
         this.active = active;
         this.sort = sort;
+        this.type = type;
     }
 
     @Id
@@ -30,6 +31,19 @@ public class Events {
     private String description;
     private String active;
     private Integer sort;
+
+    private String type;
+
+    private Integer compareTo;
+
+    public String getType() {
+        type = "event";
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Integer getSort() {
         return sort;
