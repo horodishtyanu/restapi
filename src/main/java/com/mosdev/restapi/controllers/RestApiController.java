@@ -6,10 +6,7 @@ import com.mosdev.restapi.domain.Ads;
 import com.mosdev.restapi.domain.Affiche;
 import com.mosdev.restapi.domain.Events;
 import com.mosdev.restapi.domain.Quiz;
-import com.mosdev.restapi.repos.AdsRepo;
-import com.mosdev.restapi.repos.AfficheRepo;
-import com.mosdev.restapi.repos.EventsRepo;
-import com.mosdev.restapi.repos.QuizRepo;
+import com.mosdev.restapi.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,14 +27,19 @@ public class RestApiController {
     private final EventsRepo eventsRepo;
     private final AdsRepo adsRepo;
     private final QuizRepo quizRepo;
-    private Object o1;
+    private final HistoryRepo historyRepo;
+    private final ArtistsRepo artistsRepo;
+    private final LeadersRepo leadersRepo;
 
     @Autowired
-    public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo, AdsRepo adsRepo, QuizRepo quizRepo) {
+    public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo, AdsRepo adsRepo, QuizRepo quizRepo, HistoryRepo historyRepo, ArtistsRepo artistsRepo, LeadersRepo leadersRepo) {
         this.afficheRepo = afficheRepo;
         this.eventsRepo = eventsRepo;
         this.adsRepo = adsRepo;
         this.quizRepo = quizRepo;
+        this.historyRepo = historyRepo;
+        this.artistsRepo = artistsRepo;
+        this.leadersRepo = leadersRepo;
     }
     @GetMapping("/poster")
     public Object getPoster(Map<Affiche, Long> list){
@@ -80,6 +82,14 @@ public class RestApiController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/about")
+    public Object getAbout(){
+        Map<String, List> allAbout = new HashMap<>();
+        allAbout.put("history", historyRepo.findAll());
+        allAbout.put("leaders", leadersRepo.findAll());
+        allAbout.put("artists", artistsRepo.findAll());
+        return new ResponseEntity<>(allAbout, HttpStatus.OK);
+    }
 
     @GetMapping("/downFile")
     public void downloadFile(HttpServletResponse response) throws IOException {
