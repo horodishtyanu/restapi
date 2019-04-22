@@ -2,18 +2,15 @@ package com.mosdev.restapi.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.mosdev.restapi.domain.Ads;
-import com.mosdev.restapi.domain.Affiche;
-import com.mosdev.restapi.domain.Events;
-import com.mosdev.restapi.domain.Quiz;
+import com.mosdev.restapi.domain.*;
 import com.mosdev.restapi.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.lang.model.element.Element;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -30,9 +27,10 @@ public class RestApiController {
     private final HistoryRepo historyRepo;
     private final ArtistsRepo artistsRepo;
     private final LeadersRepo leadersRepo;
+    private final QuizAnswerRepo quizAnswerRepo;
 
     @Autowired
-    public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo, AdsRepo adsRepo, QuizRepo quizRepo, HistoryRepo historyRepo, ArtistsRepo artistsRepo, LeadersRepo leadersRepo) {
+    public RestApiController(AfficheRepo afficheRepo, EventsRepo eventsRepo, AdsRepo adsRepo, QuizRepo quizRepo, HistoryRepo historyRepo, ArtistsRepo artistsRepo, LeadersRepo leadersRepo, QuizAnswerRepo quizAnswerRepo) {
         this.afficheRepo = afficheRepo;
         this.eventsRepo = eventsRepo;
         this.adsRepo = adsRepo;
@@ -40,10 +38,37 @@ public class RestApiController {
         this.historyRepo = historyRepo;
         this.artistsRepo = artistsRepo;
         this.leadersRepo = leadersRepo;
+        this.quizAnswerRepo = quizAnswerRepo;
     }
     @GetMapping("/poster")
     public Object getPoster(Map<Affiche, Long> list){
         return afficheRepo.findAll();
+    }
+
+    @PostMapping("/quizResults")
+    public Object quizResults(@RequestBody String quizResults){
+        ArrayList list = new ArrayList();
+        try {
+            ObjectMapper or = new ObjectMapper();
+            list = or.readValue(quizResults, ArrayList.class);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        int answerCount = 0;
+        int i;
+        for (i = 0; i < list.size(); i++){
+            Long answerId = ((Integer)list.get(i)).longValue();
+            QuizAnswer answer = quizAnswerRepo.getOne(answerId);
+            if (answer.getIs_correct()) {
+                answerCount++;
+            }
+        }
+        Map<String, Integer> result = new HashMap<>();
+        result.put("allAnswers", i);
+        result.put("correctAnswers", answerCount);
+
+        return result;
     }
 
     @GetMapping("/events")
