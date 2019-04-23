@@ -67,6 +67,7 @@ public class RestApiController {
         }
 
         Integer quizAllPoints = quizRepo.getOne(quizId).getPoints();
+        int allQuizQuest = quizRepo.getOne(quizId).getQuests().size();
         if (quizAllPoints == null){
             return new ResponseEntity<>("Не указано количество баллов в викторине", HttpStatus.BAD_REQUEST);
         }
@@ -82,7 +83,7 @@ public class RestApiController {
             }
         }
 
-        float mathPoints = (quizAllPoints.floatValue()/allAnswers) * correctAnswerCount.floatValue();
+        float mathPoints = (quizAllPoints.floatValue()/allQuizQuest) * correctAnswerCount.floatValue();
         Integer quizResultPoints = Math.round(mathPoints);
 
         result.put("all_answers", allAnswers);
