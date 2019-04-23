@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.lang.model.element.Element;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.nio.file.Files;
@@ -47,28 +46,51 @@ public class RestApiController {
 
     @PostMapping("/quizResults")
     public Object quizResults(@RequestBody String quizResults){
-        ArrayList list = new ArrayList();
+        QuizResponse jsonObject = new QuizResponse();
+        Map<String, Integer> result = new HashMap<>();
+        ObjectMapper or = new ObjectMapper();
+        ArrayList<Integer> idAnswers;
+
+        int allAnswers;
+        Integer correctAnswerCount = 0;
+
         try {
-            ObjectMapper or = new ObjectMapper();
-            list = or.readValue(quizResults, ArrayList.class);
+            jsonObject = or.readValue(quizResults, QuizResponse.class);
         }catch (IOException e){
             e.printStackTrace();
         }
+        idAnswers = jsonObject.getAnswers();
 
-        int answerCount = 0;
-        int i;
-        for (i = 0; i < list.size(); i++){
-            Long answerId = ((Integer)list.get(i)).longValue();
+        Long quizId = (jsonObject.getQuiz_id()).longValue();
+        if (quizId <= 0){
+            return new ResponseEntity<>("Некорректный ID викторины", HttpStatus.BAD_REQUEST);
+        }
+
+        Integer quizAllPoints = quizRepo.getOne(quizId).getPoints();
+        if (quizAllPoints == null){
+            return new ResponseEntity<>("Не указано количество баллов в викторине", HttpStatus.BAD_REQUEST);
+        }
+
+        for (allAnswers = 0; allAnswers < idAnswers.size(); allAnswers++){
+            Long answerId = (idAnswers.get(allAnswers)).longValue();
+            if (answerId <= 0){
+                return new ResponseEntity<>("Некорректный ID ответа", HttpStatus.BAD_REQUEST);
+            }
             QuizAnswer answer = quizAnswerRepo.getOne(answerId);
             if (answer.getIs_correct()) {
-                answerCount++;
+                correctAnswerCount++;
             }
         }
-        Map<String, Integer> result = new HashMap<>();
-        result.put("allAnswers", i);
-        result.put("correctAnswers", answerCount);
 
-        return result;
+        float mathPoints = (quizAllPoints.floatValue()/allAnswers) * correctAnswerCount.floatValue();
+        Integer quizResultPoints = Math.round(mathPoints);
+
+        result.put("all_answers", allAnswers);
+        result.put("correct_answers", correctAnswerCount);
+        result.put("quiz_all_points", quizAllPoints);
+        result.put("quiz_result_points", quizResultPoints);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/events")

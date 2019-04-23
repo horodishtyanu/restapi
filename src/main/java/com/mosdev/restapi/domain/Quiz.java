@@ -9,7 +9,8 @@ public class Quiz implements Comparable<Quiz>{
     public Quiz() {
     }
 
-    public Quiz(String name, String image, String preview_image, String task_text, String prize_text, String active, String type, Long time, Integer sort, Set<QuizQuest> quests) {
+    public Quiz(Integer points, String name, String image, String preview_image, String task_text, String prize_text, String active, String type, Long time, Integer sort, Set<QuizQuest> quests) {
+        this.points = points;
         this.name = name;
         this.image = image;
         this.preview_image = preview_image;
@@ -24,8 +25,9 @@ public class Quiz implements Comparable<Quiz>{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
+    private Integer points;
     private String name,
             image,
             preview_image,
@@ -53,6 +55,14 @@ public class Quiz implements Comparable<Quiz>{
         this.type = type;
     }
 
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
     public Set<QuizQuest> getQuests() {
         return quests;
     }
@@ -61,11 +71,11 @@ public class Quiz implements Comparable<Quiz>{
         this.quests = quests;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
